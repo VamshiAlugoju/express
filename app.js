@@ -2,21 +2,18 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 
+const adminroutes = require("./routes/admin");
+const shoproutes  = require("./routes/shop");
 
-app.use(bodyParser.urlencoded());
 
-app.use( "/add-product" , (req,res,next)=>{
-    res.send('<form action="/product" method="post"><input type="text" name="name" id="Name"><input type="text" name="size" id="size"><input type="submit" name="btn" id="btn" value="click"></form>')
-})
+app.use(bodyParser.urlencoded({extended: false}));
 
-app.use("/product" , (req,res,next)=>{
-    console.log(req.body);
-    res.redirect("/");
-})
+app.use( "/admin", adminroutes);
+app.use( "/shop" , shoproutes);
+ 
+app.use((req,res,next)=>{
 
-app.use( "/" , (req,res,next)=>{
-     
-    res.send("hellof")
+   res.status(404).send("<h1> page is not found </h1>");
 })
 
 app.listen(4000)
