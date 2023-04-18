@@ -2,18 +2,18 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 
-const adminroutes = require("./routes/admin");
-const shoproutes  = require("./routes/shop");
+
+const login = require("./routes/login");
+const message  = require("./routes/send");
 
 
 app.use(bodyParser.urlencoded({extended: false}));
 
-app.use( "/admin", adminroutes);
-app.use( "/shop" , shoproutes);
- 
-app.use((req,res,next)=>{
+app.use(login);
+app.use(message);
+  
 
-   res.status(404).send("<h1> page is not found </h1>");
-})
+app.listen(2000,()=>{
+    console.log("server is running " )
+}) 
 
-app.listen(4000)
