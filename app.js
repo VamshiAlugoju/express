@@ -9,6 +9,7 @@ app.use(express.static(path.join(__dirname,"public")))
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const contactRoute = require("./routes/contact");
+const contactController = require("./controllers/contact");
 
 
 app.use('/admin', adminRoutes);
@@ -18,8 +19,6 @@ app.get("/success" , (req,res,next)=>{
     res.sendFile(path.join(__dirname , "views" , "success.html"));
 })
 
-app.use((req, res, next) => {
-    res.status(404).sendFile(path.join(__dirname , "views" , "pageNotfound.html"));
-});
+app.use(contactController.successPage);
 
 app.listen(4000);
