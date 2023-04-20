@@ -1,40 +1,48 @@
+const fs = require('fs');
+const path = require('path');
 
-const { json } = require("body-parser");
-const { fileLoader } = require("ejs");
-const fs = require("fs");
+const p = path.join(
+  path.dirname(process.mainModule.filename),
+  'data',
+  'products.json'
+);
 
-let products =[];
-
- function readOnce(cb)
- {  
-        fs.readFile("models/store.json" , (err,content)=>{
-            products = JSON.parse(content);  
-           if(cb)
-           {
-               cb(products);
-           } 
-       })
- }
-
- class Product {
-    
-    constructor(name){
-        this.title = name
+const getProductsFromFile = cb => {
+  fs.readFile(p, (err, fileContent) => {
+    if (err) {
+      cb([]);
+    } else {
+      cb(JSON.parse(fileContent));
     }
+  });
+};
 
-    save()
-    {
-     products.push(this);
-     fs.writeFile("models/store.json", JSON.stringify( products) ,(err)=>{
-       console.log(err)
+module.exports = class Product {
+  constructor(title, imageUrl, description, price) {
+    this.title = title;
+    this.imageUrl = imageUrl;
+    this.description = description;
+    this.price = price;
+  }
+
+  save() {
+    this.id = Math.random().toString();
+    getProductsFromFile(products => {
+      products.push(this);
+      fs.writeFile(p, JSON.stringify(products), err => {
+        console.log(err);
+      });
     });
-    }
+  }
 
-    static  showAll(cb)
-    {  
-         readOnce(cb);
-    }
-}
- 
+  static fetchAll(cb) {
+    getProductsFromFile(cb);
+  }
 
-module.exports = Product;
+  static findById(id, cb) {
+    getProductsFromFile(products => {
+      const product = products.find(p => p.id === id);
+      cb(product);
+    });
+  }
+};

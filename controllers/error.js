@@ -1,5 +1,3 @@
-exports.errrorPage = (req, res, next) => {
-    res.status(404).render('404', { pageTitle: 'No products',
-                                    path: ''
-});
-  };
+exports.get404 = (req, res, next) => {
+  res.status(404).render('404', { pageTitle: 'Page Not Found', path: '/404' });
+};
