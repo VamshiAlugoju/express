@@ -15,8 +15,11 @@ exports.getProducts = (req, res, next) => {
   exports.postProducts =  (req, res, next) => {
 
     const product = new Product(req.body.title);
-    product.save();
-    res.redirect('/');
+    product.save()
+    .then(res=>{
+      res.redirect('/');
+    })
+    .catch(err=>{console.log(err)});
   }
  
 
